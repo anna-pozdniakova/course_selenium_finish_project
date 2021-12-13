@@ -27,7 +27,6 @@ class ProductPage(BasePage):
         self.solve_quiz_and_get_code()
         el2 = self.browser.find_element(*AddProductLocators.BOOK_PRICE_ADDED)
         assert price1 == el2.text, "Another price"
-        #assert self.is_element_present(*AddProductLocators.BOOK_PRICE_ADDED), "Not be price"
 
     def solve_quiz_and_get_code(self):
         alert = self.browser.switch_to.alert
@@ -40,7 +39,7 @@ class ProductPage(BasePage):
             alert_text = alert.text
             print(f"Your code: {alert_text}")
             alert.accept()
-            return True
+            #return True
         except NoAlertPresentException:
-            return False
-            #print("No second alert presented")
+            print("No second alert")
+            #return False
