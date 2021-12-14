@@ -1,6 +1,7 @@
 from .base_page import BasePage
 from selenium.common.exceptions import NoAlertPresentException
 from .locators import AddProductLocators
+from .locators import MainPageLocators
 import math
 
 class ProductPage(BasePage):
@@ -28,6 +29,14 @@ class ProductPage(BasePage):
         el2 = self.browser.find_element(*AddProductLocators.BOOK_PRICE_ADDED)
         assert price1 == el2.text, "Another price"
 
+    def should_not_be_success_message(self):
+        assert self.is_not_element_present(*AddProductLocators.BOOK_NAME_ADDED), \
+            "Success message is presented, but should not be"
+
+    def should_be_disappeared_message(self):
+        assert self.is_disappeared(*AddProductLocators.BOOK_NAME_ADDED), \
+            "Success message is disappeared, but should be"
+
     def solve_quiz_and_get_code(self):
         alert = self.browser.switch_to.alert
         x = alert.text.split(" ")[2]
@@ -43,3 +52,23 @@ class ProductPage(BasePage):
         except NoAlertPresentException:
             print("No second alert")
             #return False
+
+    def should_be_login_page(self):
+        self.should_be_login_url()
+        self.should_be_login_form()
+        self.should_be_register_form()
+
+    def should_be_login_url(self):
+        # реализуйте проверку на корректный url адрес
+        assert 'login' in self.browser.current_url, "URL not considered 'login'"
+
+    def should_be_login_form(self):
+        # реализуйте проверку, что есть форма логина
+        assert self.is_element_present(*LoginPageLocators.LOGIN_FORM), "Login form is not presented"
+
+    def should_be_register_form(self):
+        # реализуйте проверку, что есть форма регистрации на странице
+        assert self.is_element_present(*LoginPageLocators.REGISTRATION_FORM), "Registration form is not presented"
+
+    def should_be_click_login(self):
+        assert self.is_clicked(*MainPageLocators.LOGIN_LINK), "Not clickable login link"
