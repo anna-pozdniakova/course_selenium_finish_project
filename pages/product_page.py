@@ -72,10 +72,4 @@ class ProductPage(BasePage):
     def should_be_click_login(self):
         assert self.is_clicked(*MainPageLocators.LOGIN_LINK), "Not clickable login link"
 
-    def should_not_be_product_in_basket(self):
-        assert self.is_not_element_present(*BasePageLocators.BASKET_ITEMS), \
-            "List products is presented, but should not be"
 
-    def should_not_be_message_empty_in_basket(self):
-        assert self.is_element_present(*BasePageLocators.BASKET_MESSAGE), \
-            "Empty basket message be not, but should not be"

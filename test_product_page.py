@@ -1,5 +1,6 @@
 from .pages.product_page import ProductPage
 from .pages.login_page import LoginPage
+from .pages.basket_page import BasketPage
 import time
 import pytest
 
@@ -7,7 +8,6 @@ link_promo_2019 = 'http://selenium1py.pythonanywhere.com/catalogue/coders-at-wor
 link_main_page = "http://selenium1py.pythonanywhere.com/"
 link_product = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
 
-@pytest.mark.skip
 class TestGuestAddToBasketFromProductPage:
     @pytest.mark.parametrize('ind', range(0,10))
     def test_correct_name(self, browser,ind):
@@ -15,6 +15,26 @@ class TestGuestAddToBasketFromProductPage:
         page = ProductPage(browser, link)
         page.open()
         page.should_be_message_by_book_name()
+
+    @pytest.mark.need_review
+    def test_guest_can_add_product_to_basket(self, browser):
+        page = ProductPage(browser, link_promo_2019)
+        page.open()
+        page.should_be_message_by_book_name()
+
+    @pytest.mark.need_review
+    def test_guest_can_go_to_login_page_from_product_page(self, browser):
+        page = ProductPage(browser, link_product)
+        page.open()
+        page.should_be_click_login()
+
+    @pytest.mark.need_review
+    def test_guest_cant_see_product_in_basket_opened_from_main_page(self, browser):
+        page = BasketPage(browser, link_main_page)
+        page.open()
+        page.open_basket()
+        page.should_not_be_product_in_basket()
+        page.should_not_be_message_empty_in_basket()
 
     def test_correct_price(self, browser):
         page = ProductPage(browser, link_promo_2019)
@@ -55,6 +75,7 @@ class TestUserAddToBasketFromProductPage:
         page.open()
         page.should_not_be_success_message()
 
+    @pytest.mark.need_review
     def test_user_can_add_product_to_basket(self, browser):
         page = ProductPage(browser, link_product)
         page.open()

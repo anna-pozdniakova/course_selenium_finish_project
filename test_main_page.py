@@ -1,5 +1,6 @@
 from .pages.main_page import MainPage
 from .pages.login_page import LoginPage
+from .pages.basket_page import BasketPage
 from .pages.product_page import ProductPage
 import time
 import pytest
@@ -33,14 +34,14 @@ def test_guest_can_go_to_login_page_from_product_page(browser):
     page.should_be_click_login()
 
 def test_guest_cant_see_product_in_basket_opened_from_main_page(browser):
-    page = ProductPage(browser, link_main_page)
+    page = BasketPage(browser, link_main_page)
     page.open()
     page.open_basket()
     page.should_not_be_product_in_basket()
     page.should_not_be_message_empty_in_basket()
 
 def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
-    page = ProductPage(browser, link_product)
+    page = BasketPage(browser, link_product)
     page.open()
     page.open_basket()
     page.should_not_be_product_in_basket()
