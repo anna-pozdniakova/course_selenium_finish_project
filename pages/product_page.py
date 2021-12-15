@@ -2,6 +2,7 @@ from .base_page import BasePage
 from selenium.common.exceptions import NoAlertPresentException
 from .locators import AddProductLocators
 from .locators import MainPageLocators
+from .locators import BasePageLocators
 import math
 
 class ProductPage(BasePage):
@@ -13,21 +14,21 @@ class ProductPage(BasePage):
         self.add_product()
         assert self.solve_quiz_and_get_code(), "No second alert presented"
 
-    def should_be_message_by_book_name(self):
-        #assert self.is_element_present(*AddProductLocators.BOOK_NAME), "not be name1"
+    def should_be_message_by_book_name(self, check=True):
         text1 = self.browser.find_element(*AddProductLocators.BOOK_NAME).text
         self.add_product()
-        self.solve_quiz_and_get_code()
+        if check:
+            self.solve_quiz_and_get_code()
         el2 = self.browser.find_element(*AddProductLocators.BOOK_NAME_ADDED)
-        #assert self.is_element_present(*AddProductLocators.BOOK_NAME_ADDED), "not be name"
-        assert text1==el2.text, "Another name"
+        assert text1==el2.text, f"Another name: '{text1}' and '{el2.text}'"
 
-    def should_be_message_by_price(self):
+    def should_be_message_by_price(self, check=True):
         price1 = self.browser.find_element(*AddProductLocators.BOOK_PRICE).text
         self.add_product()
-        self.solve_quiz_and_get_code()
+        if check:
+            self.solve_quiz_and_get_code()
         el2 = self.browser.find_element(*AddProductLocators.BOOK_PRICE_ADDED)
-        assert price1 == el2.text, "Another price"
+        assert price1 == el2.text, f"Another price: '{price1}' and '{el2.text}'"
 
     def should_not_be_success_message(self):
         assert self.is_not_element_present(*AddProductLocators.BOOK_NAME_ADDED), \
@@ -48,10 +49,8 @@ class ProductPage(BasePage):
             alert_text = alert.text
             print(f"Your code: {alert_text}")
             alert.accept()
-            #return True
         except NoAlertPresentException:
             print("No second alert")
-            #return False
 
     def should_be_login_page(self):
         self.should_be_login_url()
@@ -72,3 +71,11 @@ class ProductPage(BasePage):
 
     def should_be_click_login(self):
         assert self.is_clicked(*MainPageLocators.LOGIN_LINK), "Not clickable login link"
+
+    def should_not_be_product_in_basket(self):
+        assert self.is_not_element_present(*BasePageLocators.BASKET_ITEMS), \
+            "List products is presented, but should not be"
+
+    def should_not_be_message_empty_in_basket(self):
+        assert self.is_element_present(*BasePageLocators.BASKET_MESSAGE), \
+            "Empty basket message be not, but should not be"
